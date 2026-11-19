@@ -126,6 +126,22 @@ function auditShots(shotDir: string): { files: number; bytes: number } {
   return { files: names.length, bytes };
 }
 
+// After copying, confirm the output tree really matches the source: same
+// file names and sizes in app/ and screenshots/. A silent partial copy
+// would otherwise be baked into the dossier without anyone noticing.
+function verifyCopy(repoSide: string, outSide: string, label: string): void {
+  const expected = listFiles(repoSide);
+  const actual = listFiles(outSide);
+  if (expected.length !== actual.length || expected.some((name, i) => name !== actual[i])) {
+    fail(`${label}/ in the output does not list the same files as the repository`);
+  }
+  for (const name of expected) {
+    const fromSize = statSync(join(repoSide, name)).size;
+    const toSize = statSync(join(outSide, name)).size;
+    if (fromSize !== toSize) fail(`${label}/${name} copied as ${toSize} bytes, expected ${fromSize}`);
+  }
+}
+
 const appDir = join(repoDir, 'app');
 const shotDir = join(repoDir, 'screenshots');
 
@@ -137,6 +153,10 @@ mkdirSync(outDir, { recursive: true });
 cpSync(appDir, join(outDir, 'app'), { recursive: true });
 mkdirSync(join(outDir, 'screenshots'), { recursive: true });
 if (existsSync(shotDir)) cpSync(shotDir, join(outDir, 'screenshots'), { recursive: true });
+
+verifyCopy(appDir, join(outDir, 'app'), 'app');
+verifyCopy(shotDir, join(outDir, 'screenshots'), 'screenshots');
+console.log('copy verified: output tree matches the repository');
 
 const dossier = buildDossier(outDir, {
   text_max_bytes: GATE.textMaxBytes,
