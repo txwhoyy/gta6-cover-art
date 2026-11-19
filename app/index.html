@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vice Panels — GTA-Style Cover Art Maker</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<main class="app">
+  <section class="controls">
+    <header class="brand">
+      <h1>Vice <span>Panels</span></h1>
+      <p>Your photos, turned into bold multi-panel cover art. Pick photos, arrange the panels, stamp a title, export a PNG. Everything stays on your machine.</p>
+    </header>
+
+    <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Add photos">
+      <strong>Drop photos here</strong>
+      <span>or click to browse — JPG / PNG, as many as you like</span>
+      <input id="photo-input" type="file" accept="image/*" multiple hidden>
+    </div>
+    <div class="row">
+      <button type="button" class="chip" data-sample="boulevard">Demo: Boulevard</button>
+      <button type="button" class="chip" data-sample="pier">Demo: Pier</button>
+    </div>
+    <div id="photo-strip" class="photo-strip" aria-label="Loaded photos"></div>
+
+    <fieldset>
+      <legend>Layout</legend>
+      <div class="row wrap">
+        <button type="button" class="chip" data-layout="diagonal">Diagonal Trio</button>
+        <button type="button" class="chip" data-layout="grid">Grid Four</button>
+        <button type="button" class="chip" data-layout="hero">Hero + Strips</button>
+        <button type="button" class="chip" data-layout="duo">Split Duo</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Colour grade</legend>
+      <div class="row wrap">
+        <button type="button" class="chip" data-grade="sunset">Vice Sunset</button>
+        <button type="button" class="chip" data-grade="neon">Neon Night</button>
+        <button type="button" class="chip" data-grade="golden">Golden Hour</button>
+        <button type="button" class="chip" data-grade="clean">Clean</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Title block</legend>
+      <label>Title <input id="title-input" type="text" maxlength="26" value="Vice Heat"></label>
+      <label>Kicker <input id="sub-input" type="text" maxlength="34" value="Leonida Nights"></label>
+      <label>Tagline <input id="tag-input" type="text" maxlength="40" value="One city · One score"></label>
+      <div class="row wrap">
+        <button type="button" class="chip" data-tstyle="classic">Classic White</button>
+        <button type="button" class="chip" data-tstyle="vice">Vice Pink</button>
+        <button type="button" class="chip" data-tstyle="gold">Gold Rush</button>
+        <button type="button" class="chip" data-tstyle="mint">Mint Pop</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Panel editing</legend>
+      <p id="panel-label" class="panel-label">Panel 1</p>
+      <label>Zoom <input id="zoom" type="range" min="1" max="3" step="0.01" value="1"></label>
+      <div class="row">
+        <button type="button" class="chip" id="center-btn">Re-centre</button>
+        <button type="button" class="chip" id="shuffle-btn">Shuffle photos</button>
+      </div>
+      <p class="hint">Click a panel on the cover to select it, drag to reposition its photo, scroll to zoom.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Export size</legend>
+      <div class="row wrap">
+        <button type="button" class="chip" data-size="1080x1080">Square 1080×1080</button>
+        <button type="button" class="chip" data-size="1080x1350">Portrait 1080×1350</button>
+        <button type="button" class="chip" data-size="1920x1080">Wide 1920×1080</button>
+      </div>
+    </fieldset>
+
+    <button id="export-btn" type="button" class="export">Export PNG</button>
+    <p id="status" role="status"></p>
+  </section>
+  <section class="stage">
+    <canvas id="cover" width="1080" height="1080" aria-label="Live cover preview"></canvas>
+  </section>
+</main>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
