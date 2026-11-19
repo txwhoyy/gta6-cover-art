@@ -292,6 +292,16 @@ export function drawCover(canvas, state) {
   });
   applyGrade(ctx, w, h, state.grade);
   strokeDividers(ctx, shapes, w, h);
+  // In the editor (never on an export) the selected panel gets a warm outline
+  // so it is obvious which photo a drag or the zoom slider will move.
+  if (Number.isInteger(state.highlight) && shapes[state.highlight]) {
+    traceShape(ctx, shapes[state.highlight], w, h);
+    ctx.strokeStyle = '#ffb35c';
+    ctx.lineWidth = Math.max(4, Math.min(w, h) * 0.008);
+    ctx.setLineDash([Math.min(w, h) * 0.03, Math.min(w, h) * 0.018]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
   drawTitleBlock(ctx, w, h, state);
 }
 

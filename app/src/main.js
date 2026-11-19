@@ -43,11 +43,12 @@ function syncPanelCount() {
   if (state.selected >= count) state.selected = 0;
 }
 
-function renderState() {
+function renderState(forExport = false) {
   return {
     layout: state.layout,
     grade: state.grade,
     titleStyle: state.titleStyle,
+    highlight: forExport || state.shotMode ? null : state.selected,
     title: state.title,
     subtitle: state.subtitle,
     tagline: state.tagline,
@@ -223,7 +224,10 @@ canvas.addEventListener('wheel', (e) => {
 }, { passive: false });
 
 document.getElementById('export-btn').addEventListener('click', () => {
+  // Re-render without the editor's selection outline so exports stay clean.
+  drawCover(canvas, renderState(true));
   canvas.toBlob((blob) => {
+    redraw();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `vice-panels-${state.size}.png`;
@@ -237,6 +241,7 @@ document.getElementById('export-btn').addEventListener('click', () => {
 const api = {
   async loadSample(name) { return loadImage(`samples/${name}.jpg`); },
   applyScene(scene) {
+    state.shotMode = true;
     state.photos = scene.images.map((img, i) => ({ img, name: `sample ${i + 1}` }));
     state.layout = LAYOUTS[scene.layout] ? scene.layout : 'diagonal';
     state.grade = GRADES[scene.grade] ? scene.grade : 'sunset';
